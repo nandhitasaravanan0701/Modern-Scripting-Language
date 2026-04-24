@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="studentLab">
+<head>
+    <title>Student Records</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .card { border: 1px solid #ccc; padding: 15px; margin: 10px; width: 250px; display: inline-block; vertical-align: top;}
+        .pass { color: green; }
+        .fail { color: red; }
+    </style>
+</head>
+<body ng-controller="StudentController">
+
+    <h1>Student Management</h1>
+
+    <!-- 1. Event Directive (ng-click) -->
+    <div class="card">
+        <h3>Attendance</h3>
+        <button ng-click="attendance = attendance + 1">Present: {{attendance}}</button>
+    </div>
+
+    <!-- 2. Structural Directive (ng-if) -->
+    <div class="card">
+        <h3>Result</h3>
+        <input type="number" ng-model="marks" placeholder="Enter marks">
+        <p ng-if="marks >= 50" class="pass">Pass</p>
+        <p ng-if="marks < 50 && marks != null" class="fail">Fail</p>
+    </div>
+
+    <!-- 3. Attribute Directive (ng-style) -->
+    <div class="card">
+        <h3>Fee Status</h3>
+        <p ng-style="{color: feeStatus === 'Paid' ? 'green' : 'red'}">
+            Status: {{feeStatus}}
+        </p>
+        <button ng-click="toggleFees()">Toggle</button>
+    </div>
+
+    <!-- 4. Repeat Directive (ng-repeat) -->
+    <div class="card">
+        <h3>Class List</h3>
+        <ul>
+            <li ng-repeat="student in students">{{student.name}}</li>
+        </ul>
+    </div>
+
+    <script>
+        angular.module('studentLab', [])
+        .controller('StudentController', function($scope) {
+            $scope.attendance = 0;
+            $scope.feeStatus = "Pending";
+            $scope.students = [{name: 'Alice'}, {name: 'Bob'}];
+            
+            $scope.toggleFees = function() {
+                $scope.feeStatus = $scope.feeStatus === "Paid" ? "Pending" : "Paid";
+            };
+        });
+    </script>
+</body>
+</html>
