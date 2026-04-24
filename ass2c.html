@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>AngularJS Multi-Component Demo</title>
+    <!-- Using your local file path -->
+    <script src="E:\msl\angular.min.js"></script>
+    <style>
+        .container { font-family: 'Segoe UI', sans-serif; max-width: 500px; margin: 20px auto; text-align: center; }
+        .card { border: 2px dashed #4CAF50; padding: 20px; border-radius: 15px; background-color: #f9f9f9; margin-bottom: 20px; }
+        .card-purple { border: 2px solid #673ab7; background-color: #f3e5f5; }
+        input { width: 80%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; outline: none; margin-bottom: 10px; }
+        .result { margin-top: 15px; font-size: 20px; color: #2e7d32; font-weight: bold; }
+        .timestamp { font-size: 14px; color: #673ab7; display: block; margin-top: 5px; }
+        button { padding: 8px 15px; cursor: pointer; border-radius: 5px; border: 1px solid #666; background: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Component 1: Your Original Text Decorator -->
+    <live-preview></live-preview>
+
+    <!-- Component 2: New Status Logger -->
+    <status-logger></status-logger>
+</div>
+
+<script>
+    var app = angular.module('myApp', []);
+
+  
+
+    
+    app.filter('decorate', function() {
+        return function(input) {
+            if (!input) return "Waiting for input...";
+            return "★ [" + input + "] ★";
+        };
+    });
+
+    
+    app.filter('addTimestamp', function() {
+        return function(input) {
+            if (!input) return "No status entered";
+            var time = new Date().toLocaleTimeString();
+            return input + " (Updated at: " + time + ")";
+        };
+    });
+
+  
+    app.component('livePreview', {
+        template: `
+            <div class="card">
+                <h3>1. Text Decorator</h3>
+                <input type="text" ng-model="$ctrl.userInput" placeholder="Type a message...">
+                <div class="result">{{ $ctrl.userInput | decorate }}</div>
+                <button ng-click="$ctrl.reset()">Clear</button>
+            </div>
+        `,
+        controller: function() {
+            this.userInput = "";
+            this.reset = function() { this.userInput = ""; };
+        }
+    });
+
+   
+    app.component('statusLogger', {
+        template: `
+            <div class="card card-purple">
+                <h3>2. Status Logger</h3>
+                <input type="text" ng-model="$ctrl.status" placeholder="How are you feeling?">
+                <div class="result" style="color: #4a148c;">
+                    Current Status:
+                    <span class="timestamp">{{ $ctrl.status | addTimestamp }}</span>
+                </div>
+            </div>
+        `,
+        controller: function() {
+            this.status = "";
+        }
+    });
+</script>
+
+</body>
+</html>
